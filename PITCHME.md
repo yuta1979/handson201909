@@ -1,11 +1,12 @@
 ### 事前準備
-ゲスト用wifiにつないでいること
-ソフトウェアダウンロード
-* TeraTerm https://ja.osdn.net/projects/ttssh2/
-* テキストエディタ
 
-ハンズオン資料・template.ymlのダウンロード
-ハンズオン資料格納 OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
+* ゲスト用wifiにつないでいること
+* ソフトウェアダウンロード
+ * TeraTerm https://ja.osdn.net/projects/ttssh2/
+ * テキストエディタ
+
+* ハンズオン資料・template.ymlのダウンロード
+OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
 ---
 ## ハンズオンシナリオ CloudFormation編
@@ -162,8 +163,8 @@ https://743559742203.signin.aws.amazon.com/console
 
 ---
 
-ハンズオン資料・template.ymlのダウンロード
-ハンズオン資料格納 OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
+ハンズオン資料格納OneDrive
+[LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
 キーペアを作成する
  EC2 -> ネットワーク＆セキュリティ -> キーペア
@@ -406,8 +407,11 @@ template2.yml
 dry-runをイメージしてもらえるとわかりやすいと思います。
 では実際にやってみましょう。
 
+---
 スタックの状況が
+
 UPDATE_COMPLETE
+
 になったら正しく反映できています。
 
 ---
@@ -501,7 +505,7 @@ aws cloudformation delete-stack --stack-name {任意のスタック名}
 ---
 ### クロージング
 * AWSなどクラウドサービスの困りごとや気になったこと
-* Teams紹介
+* Teams紹介 (コード: zi1ntls )
 * アンケートについて
 
 ---
