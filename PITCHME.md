@@ -1,3 +1,12 @@
+### 事前準備
+ゲスト用wifiにつないでいること
+ソフトウェアダウンロード
+ * TeraTerm https://ja.osdn.net/projects/ttssh2/
+ * テキストエディタ
+ハンズオン資料・template.ymlのダウンロード
+  ハンズオン資料格納 OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
+
+---
 ## ハンズオンシナリオ CloudFormation編
 ### TDC AWS WorkingGroup
 
@@ -25,32 +34,29 @@ AWS上に自動でリソースを作成する定義ファイルを実行する�
 https://qiita.com/fkana/items/21f7cc3b327445483d5c
 
 ---
-## CloudFormationのメリット
-### すべてのモデル化
-
+### CloudFormationのメリット
+* すべてのモデル化
 AWS CloudFormation では、お客様のインフラストラクチャ全体をテキストファイルでモデル化できます。
 このテンプレートは、インフラストラクチャにおける真の単一ソースとなります。
 これにより、組織全体にわたって、使用されるインフラストラクチャコンポーネントを標準化し、
 構成の準拠とトラブルシューティングの時間短縮を実現します。
 
 ---
-### 自動化とデプロイ
-
+* 自動化とデプロイ
 AWS CloudFormation では、安全で繰り返し可能な方法でリソースがプロビジョニングされるため、
 手作業やカスタムスクリプト作成を必要とせずにインフラストラクチャとアプリケーションの構築と再構築が可能になります。
 スタックの管理時には、実行に適した操作が CloudFormation によって自動的に決定され、エラーが検出された場合は
 変更が自動的にロールバックされます。
 
 ---
-### 単なるコード
-
+* 単なるコード
 インフラストラクチャをコード化することで、インフラストラクチャを単なるコードとして扱えるようになります。
 任意のコードエディタで作成してバージョン管理システムにチェックインし、プロダクションにデプロイする前に
 チームメンバーとファイルを確認することができます。
 (AWSのドキュメントより引用)
 
 ---
-## CloudFormationの概念
+### CloudFormationの概念
 
 AWS CloudFormation を使用する際には、テンプレートとスタックの作業を行います。
 テンプレートは、AWS リソースとそのプロパティを記述するために作成します。
@@ -120,6 +126,7 @@ AWS CloudFormation を使用する際、関連リソースはスタックと呼�
 管理します。スタックを作成、更新、削除することで、リソースのコレクションを作成、更新、削除します。
 スタック内のすべてのリソースは、スタックの AWS CloudFormation テンプレートで定義されます。
 
+---
 → 削除が出来るため、1つのスタックにまとめすぎると運用が回らなくなる場合もあります。
 サービスカット(VPC,セキュリティーグループ,EC2,ALBRDS)でテンプレートを分割するパターンが多くみられます。
 
@@ -130,6 +137,7 @@ AWS CloudFormation を使用する際、関連リソースはスタックと呼�
 変更セットで、変更が実行中のリソース、特に重要なリソースに与える可能性のある影響を、
 実装前に確認できます。
 
+---
 → Amazon RDS データベースインスタンスの名前を変更すると、AWS CloudFormation によって
 新しいデータベースが作成され、古いものは削除されます。
 古いデータベースのデータは、バックアップしていない限り、失われます。
@@ -137,17 +145,17 @@ AWS CloudFormation を使用する際、関連リソースはスタックと呼�
 スタックを更新する前に対応策を立てることができます
 
 ---
-## ハンズオン
+### ハンズオン
 実際に触ってみよう！
 
 ---
-### 前準備
+### アカウント
 ハンズオン用AWSアカウントのURL
 `https://743559742203.signin.aws.amazon.com/console`
-ゲスト用wifiにつないでいること
-ソフトウェアダウンロード
- * TeraTerm https://ja.osdn.net/projects/ttssh2/
- * テキストエディタ
+ログインIDはメールアドレス
+パスは当日説明
+
+---
 ハンズオン資料・template.ymlのダウンロード
   ハンズオン資料格納 OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 キーペアを作成する
@@ -160,8 +168,8 @@ AWS CloudFormation を使用する際、関連リソースはスタックと呼�
 
 ---
 ### リソースを定義するためのTemplateを書く
-管理するAWSリソースを定義するテンプレートです。(yml)
 
+管理するAWSリソースを定義するテンプレートです。(yml)
 まずはこんな形のymlを用意しましょう
 
 ```template0.yml
@@ -177,8 +185,7 @@ Outputs:
 
 ---
 ### Parameters (変数)
-そのまんまです。
-サービス名で定義してみましょう。
+環境変数を定義します。
 
 ```template1.yml
 Parameters:
@@ -218,7 +225,6 @@ Parameters:
 EC2やRDS、セキュリティグループ等AWSで使うサービスの定義をすべてしていきます。
 
 ではまずはWEBサーバーを作成するにあたってのAWSリソースで最低限必要なものは下記です。
-
 * SecurityGroup
 * EC2
 これを定義していきましょう
@@ -290,11 +296,12 @@ CloudFormationでは組込み関数が用意されています。
 例えばショート記法を使わない場合でRefを使用したい場合だと
 
 ```
-      SecurityGroupIds:
-        - Fn::Ref: Ec2SecurityGroupApp
+SecurityGroupIds:
+ - Fn::Ref: Ec2SecurityGroupApp
 ```
-
 と書きます。
+
+---
 :を段落区切りを表すyamlの場合この方式で書くと少々可読性が悪くなります。
 なのでショート記法で書いている人のほうが多いです。
 
@@ -306,6 +313,7 @@ CloudFormationでは組込み関数が用意されています。
 !Ref {リソース名}
 で配置するリソースの返り値を取得できます。
 
+---
 大概の場合リソースを参照したい場合は乱暴に
 !Ref {リソース名}
 と宣言すればよしなに参照できます。
@@ -353,7 +361,10 @@ EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appと
       Tags:
         - Key: Name
           Value: !Sub "${Prefix}_${ServiceName}_rds"
-  RdsInstace:
+```
+---
+```
+ RdsInstace:
     Type: "AWS::RDS::DBInstance"
     DeletionPolicy: Delete
     Properties:
@@ -389,11 +400,7 @@ dry-runをイメージしてもらえるとわかりやすいと思います。
 では実際にやってみましょう。
 
 スタックの状況が
-
-```
 UPDATE_COMPLETE
-```
-
 になったら正しく反映できています。
 
 ---
@@ -485,198 +492,10 @@ aws cloudformation delete-stack --stack-name {任意のスタック名}
 リソースの消し忘れがなくて良いですね!!
 
 ---
-## 参考
-### VPCのテンプレート
-```
-AWSTemplateFormatVersion: "2010-09-09"
-Description:
-  CFn template VPC , Subnet , RouteTable , InternetGateway
-Parameters:
-  AWSService:
-    Type: String
-    AllowedPattern: "[a-zA-Z0-9]*"
-    Default: "VPC"
-  ProjectName:
-    Type: String
-    AllowedPattern: "[a-zA-Z0-9]*"
-    Default: "CFN"
-  Env:
-    Type: String
-    AllowedPattern: "[a-zA-Z0-9]*"
-    Default: "TEST"
-  VpcCidrBlock:
-    Type: String
-    Default: 172.16.0.0/16
-  PublicCidrBlock1a:
-    Type: String
-    Default: 172.16.10.0/24
-  PublicCidrBlock1c:
-    Type: String
-    Default: 172.16.30.0/24
-  PrivateCidrBlock1a:
-    Type: String
-    Default: 172.16.20.0/24
-  PrivateCidrBlock1c:
-    Type: String
-    Default: 172.16.40.0/24
-Resources:
-# Create VPC
-  VPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: !Ref VpcCidrBlock
-      EnableDnsSupport: 'true'
-      EnableDnsHostnames: 'true'
-      InstanceTenancy: default
-      Tags:
-      - Key: Name
-        Value: !Sub ${AWSService}-${ProjectName}-${Env}
-# Create External RouteTable
-  ExternalRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-      - Key: Name
-        Value: !Sub RT-${Env}-External
-# Create Internal RouteTable
-  InternalRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-      - Key: Name
-        Value: !Sub RT-${Env}-Internal
-# Create Public Subnet 1a
-  PublicSubnet1a:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PublicCidrBlock1a
-      AvailabilityZone: "ap-northeast-1a"
-      Tags:
-      - Key: Name
-        Value: !Sub Subnet-${Env}-Public-1a
-  PublicSubnet1aRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnet1a
-      RouteTableId: !Ref ExternalRouteTable
-# Create Public Subnet 1c
-  PublicSubnet1c:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PublicCidrBlock1c
-      AvailabilityZone: "ap-northeast-1c"
-      Tags:
-      - Key: Name
-        Value: !Sub Subnet-${Env}-Public-1c
-  PublicSubnet1cRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PublicSubnet1c
-      RouteTableId: !Ref ExternalRouteTable
-# Create Private Subnet 1a
-  PrivateSubnet1a:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PrivateCidrBlock1a
-      AvailabilityZone: "ap-northeast-1a"
-      Tags:
-      - Key: Name
-        Value: !Sub Subnet-${Env}-Private-1a
-  PrivateSubnet1aRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PrivateSubnet1a
-      RouteTableId: !Ref InternalRouteTable
-# Create Private Subnet 1c
-  PrivateSubnet1c:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: !Ref PrivateCidrBlock1c
-      AvailabilityZone: "ap-northeast-1c"
-      Tags:
-      - Key: Name
-        Value: !Sub Subnet-${Env}-Private-1c
-  PrivateSubnet1cRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref PrivateSubnet1c
-      RouteTableId: !Ref InternalRouteTable
-# Create InternetGateway
-  InternetGateway:
-    Type: "AWS::EC2::InternetGateway"
-    Properties:
-      Tags:
-      - Key: Name
-        Value: !Sub IGW-${ProjectName}-${Env}
-  AttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
-  Route:
-    Type: AWS::EC2::Route
-    DependsOn: InternetGateway
-    Properties:
-      RouteTableId: !Ref ExternalRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
-# Set VPC Default Security Group
-  DefaultSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      VpcId: !Ref VPC
-      GroupDescription: 'default VPC security group'
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          CidrIp: 172.20.0.0/16
-      SecurityGroupEgress:
-          IpProtocol: -1
-          CidrIp: 172.20.0.0/16
-      Tags:
-        - Key: Name
-          Value: !Sub SG-${ProjectName}-${Env}-Default
-Outputs:
-  VPC:
-    Value: !Ref VPC
-    Export:
-      Name: !Sub "${AWS::StackName}-VPC"                       # CFN-TEST-stack01-VPC
-  CFNTESTSubnet:
-    Value: !Ref VpcCidrBlock
-    Export:
-      Name: !Sub "${AWS::StackName}-CFNTESTSubnet"            # CFN-TEST-stack01-CFNTESTSubnet
-  PublicSubnet1a:
-    Value: !Ref PublicSubnet1a
-    Export:
-      Name: !Sub "${AWS::StackName}-PublicSubnet1a"            # CFN-TEST-stack01-PublicSubnet1a
-  PublicSubnet1c:
-    Value: !Ref PublicSubnet1c
-    Export:
-      Name: !Sub "${AWS::StackName}-PublicSubnet1c"            # CFN-TEST-stack01-PublicSubnet1c
-  PrivateSubnet1a:
-    Value: !Ref PrivateSubnet1a
-    Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet1a"           # CFN-TEST-stack01-PrivateSubnet1a
-  PrivateSubnet1c:
-    Value: !Ref PrivateSubnet1c
-    Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet1c"           # CFN-TEST-stack01-PrivateSubnet1c
-  ExternalRouteTable:
-    Value: !Ref ExternalRouteTable
-    Export:
-      Name: !Sub "${AWS::StackName}-ExternalRouteTable"        # CFN-TEST-stack01-ExternalRouteTable
-  InternalRouteTable:
-    Value: !Ref InternalRouteTable
-    Export:
-      Name: !Sub "${AWS::StackName}-InternalRouteTable"        # CFN-TEST-stack01-InternalRouteTable
-  DefaultSecurityGroup:
-#    Value: !GetAtt VPC.DefaultSecurityGroup
-    Value: !Ref DefaultSecurityGroup
-    Export:
-      Name: !Sub "${AWS::StackName}-DefaultSecurityGroup"      # CFN-TEST-stack01-DefaultSecurityGroup
-```
+### クロージング
+* AWSなどクラウドサービスの困りごとや気になったこと
+* Teams紹介
+* アンケートについて
+
+---
+ありがとうございました！
