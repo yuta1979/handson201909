@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CFn hands On 201909 {UserName}
+
+Parameters:
+  Prefix:
+    Type: String
+    Default: UserName
+    Description: Prefix Name
+
+  ServiceName:
+    Type: String
+    Default: CFn-handson
+
+  KEYNAME:
+    Type: String
+    Default: KeyName
+    Description: YourKeyName
+
+  VPCID:
+    Type: String
+    Default: vpc-02820d3cb23c0c797
+    Description: VPC ID(Do not change)
+
+  SubnetID:
+    Type: String
+    Default: subnet-02326331e135155d2
+    Description: Subnet ID(Do not change)
+
+  DBSubnetID1:
+    Type: String
+    Default: subnet-0f418d828bbe20d9b
+    Description: Subnet ID(Do not change)
+
+  DBSubnetID2:
+    Type: String
+    Default: subnet-089d4928e6094dd1d
+    Description: Subnet ID(Do not change)
+
+  DBPASSWORD:
+    Type: String
+    Default: Passw0rd$
+    Description: DB PASSWORD
+
+Resources:
+  Ec2SecurityGroupApp:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: !Sub "${Prefix}_${ServiceName}_app"
+      GroupDescription: "web server security group"
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}_${ServiceName}_app"
+
+  Ec2InstanceServer:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      # AmazonLinux2を指定しています
+      ImageId: "ami-0ff21806645c5e492"
+      InstanceType: "t2.micro"
+      KeyName: !Ref KEYNAME
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp2
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref Ec2SecurityGroupApp
+          SubnetId: !Ref SubnetID
+
+  RDSDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "DBSubnets for RDS"
+      SubnetIds:
+        - !Ref SubnetID
+        - !Ref SubnetID2
+  # RDSのセキュリティグループ
+  RdsSecurityGroupApp:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: !Sub "${Prefix}_${ServiceName}_rds"
+      GroupDescription: "dbserver security group"
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        SourceSecurityGroupId: !Ref Ec2SecurityGroupApp
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}_${ServiceName}_rds"
+  RdsInstace:
+    Type: "AWS::RDS::DBInstance"
+    DeletionPolicy: Delete
+    Properties:
+      DBInstanceIdentifier: !Sub "${Prefix}-${ServiceName}-db"
+      DBSubnetGroupName: !Ref RDSDBSubnetGroup
+      DBInstanceClass: "db.t2.micro"
+      AllocatedStorage: 6
+      StorageType: gp2
+      VPCSecurityGroups:
+        - !Ref RdsSecurityGroupApp
+      Engine: MySQL
+      EngineVersion: 5.7.23
+      DBName: cfntest
+      MasterUsername: cfntest
+      MasterUserPassword: !Ref DBPASSWORD
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}_${ServiceName}_rds"

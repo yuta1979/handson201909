@@ -1,0 +1,191 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description:
+  CFn template VPC , Subnet , RouteTable , InternetGateway
+Parameters:
+  AWSService:
+    Type: String
+    AllowedPattern: "[a-zA-Z0-9]*"
+    Default: "VPC"
+  ProjectName:
+    Type: String
+    AllowedPattern: "[a-zA-Z0-9]*"
+    Default: "CFN"
+  Env:
+    Type: String
+    AllowedPattern: "[a-zA-Z0-9]*"
+    Default: "TEST"
+  VpcCidrBlock:
+    Type: String
+    Default: 172.16.0.0/16
+  PublicCidrBlock1a:
+    Type: String
+    Default: 172.16.10.0/24
+  PublicCidrBlock1c:
+    Type: String
+    Default: 172.16.30.0/24
+  PrivateCidrBlock1a:
+    Type: String
+    Default: 172.16.20.0/24
+  PrivateCidrBlock1c:
+    Type: String
+    Default: 172.16.40.0/24
+Resources:
+# Create VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidrBlock
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWSService}-${ProjectName}-${Env}
+# Create External RouteTable
+  ExternalRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub RT-${Env}-External
+# Create Internal RouteTable
+  InternalRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub RT-${Env}-Internal
+# Create Public Subnet 1a
+  PublicSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicCidrBlock1a
+      AvailabilityZone: "ap-northeast-1a"
+      Tags:
+      - Key: Name
+        Value: !Sub Subnet-${Env}-Public-1a
+  PublicSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1a
+      RouteTableId: !Ref ExternalRouteTable
+# Create Public Subnet 1c
+  PublicSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicCidrBlock1c
+      AvailabilityZone: "ap-northeast-1c"
+      Tags:
+      - Key: Name
+        Value: !Sub Subnet-${Env}-Public-1c
+  PublicSubnet1cRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1c
+      RouteTableId: !Ref ExternalRouteTable
+# Create Private Subnet 1a
+  PrivateSubnet1a:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateCidrBlock1a
+      AvailabilityZone: "ap-northeast-1a"
+      Tags:
+      - Key: Name
+        Value: !Sub Subnet-${Env}-Private-1a
+  PrivateSubnet1aRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1a
+      RouteTableId: !Ref InternalRouteTable
+# Create Private Subnet 1c
+  PrivateSubnet1c:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateCidrBlock1c
+      AvailabilityZone: "ap-northeast-1c"
+      Tags:
+      - Key: Name
+        Value: !Sub Subnet-${Env}-Private-1c
+  PrivateSubnet1cRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1c
+      RouteTableId: !Ref InternalRouteTable
+# Create InternetGateway
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+      - Key: Name
+        Value: !Sub IGW-${ProjectName}-${Env}
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+  Route:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      RouteTableId: !Ref ExternalRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+# Set VPC Default Security Group
+  DefaultSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: 'default VPC security group'
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          CidrIp: 172.20.0.0/16
+      SecurityGroupEgress:
+          IpProtocol: -1
+          CidrIp: 172.20.0.0/16
+      Tags:
+        - Key: Name
+          Value: !Sub SG-${ProjectName}-${Env}-Default
+Outputs:
+  VPC:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPC"                       # CFN-TEST-stack01-VPC
+  CFNTESTSubnet:
+    Value: !Ref VpcCidrBlock
+    Export:
+      Name: !Sub "${AWS::StackName}-CFNTESTSubnet"            # CFN-TEST-stack01-CFNTESTSubnet
+  PublicSubnet1a:
+    Value: !Ref PublicSubnet1a
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1a"            # CFN-TEST-stack01-PublicSubnet1a
+  PublicSubnet1c:
+    Value: !Ref PublicSubnet1c
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1c"            # CFN-TEST-stack01-PublicSubnet1c
+  PrivateSubnet1a:
+    Value: !Ref PrivateSubnet1a
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1a"           # CFN-TEST-stack01-PrivateSubnet1a
+  PrivateSubnet1c:
+    Value: !Ref PrivateSubnet1c
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1c"           # CFN-TEST-stack01-PrivateSubnet1c
+  ExternalRouteTable:
+    Value: !Ref ExternalRouteTable
+    Export:
+      Name: !Sub "${AWS::StackName}-ExternalRouteTable"        # CFN-TEST-stack01-ExternalRouteTable
+  InternalRouteTable:
+    Value: !Ref InternalRouteTable
+    Export:
+      Name: !Sub "${AWS::StackName}-InternalRouteTable"        # CFN-TEST-stack01-InternalRouteTable
+  DefaultSecurityGroup:
+#    Value: !GetAtt VPC.DefaultSecurityGroup
+    Value: !Ref DefaultSecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-DefaultSecurityGroup"      # CFN-TEST-stack01-DefaultSecurityGroup
