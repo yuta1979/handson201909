@@ -6,7 +6,8 @@
  * テキストエディタ
 
 * ハンズオン資料・template.ymlのダウンロード
-OneDrive [LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
+OneDrive [LINK]
+(https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
 ---
 ## ハンズオンシナリオ CloudFormation編
@@ -164,7 +165,8 @@ https://743559742203.signin.aws.amazon.com/console
 ---
 
 ハンズオン資料格納OneDrive
-[LINK] (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
+[LINK] 
+(https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
 キーペアを作成する
  EC2 -> ネットワーク＆セキュリティ -> キーペア
@@ -395,6 +397,7 @@ EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appと
 
 ---
 ここまでのtemplate.ymlは下記です
+
 template2.yml
 
 ---
@@ -431,6 +434,10 @@ Resources:
       GroupDescription: "web server security group"
       VpcId:
         "{your VPCID}"
+```
+
+---
+```
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -468,12 +475,15 @@ Server version: 5.7.23-log Source distribution
 
 Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
 
+```
+
+---
+```
 Oracle is a registered trademark of Oracle Corporation and/or its
 affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -486,7 +496,6 @@ mysql> show databases;
 | sys                |
 +--------------------+
 6 rows in set (0.00 sec)
-DBに入れました。
 ```
 
 ---
