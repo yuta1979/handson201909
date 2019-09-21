@@ -4,7 +4,15 @@
 ---
 # はじめに
 ## 講師について
-* 島田雄太
+* 名前：島田雄太　(2003年入社)
+* 所属：インテグレーションサービス部
+* 大まかな経歴：　ほぼインフラ屋
+ - 当社サービスのインフラ設計/構築/運用 10年
+ - 客先インフラ構築支援 3年
+ - AWS環境構築 (当社ホームページ、エンタープライズ向け顧客など) 2年
+* 資格：PMP、AWSソリューションアーキテクト アソシエイト
+* 好きなAWSサービス：Route53
+* 最近の楽しみ：子供と過ごす時間
 
 
 ---
@@ -13,6 +21,7 @@
   `AWS上に自動でリソースを作成する定義ファイルを実行するサービス`
   になります。
 
+---
 - 定義ファイルの書き方は2種類あり、JSON形式とYAML形式があります。
   本ハンズオンでは、ファイルにコメントを残せるYAML形式を採用します。
 
@@ -56,9 +65,11 @@ AWS CloudFormation では、安全で繰り返し可能な方法でリソース�
 AWS CloudFormation を使用する際には、テンプレートとスタックの作業を行います。テンプレートは、AWS リソースとそのプロパティを記述するために作成します。スタックを作成するたびに、AWS CloudFormation はテンプレートに記述されているリソースをプロビジョニングします。
 実行されたテンプレートはS3バケット上に保存されます。
 
+---
 ## テンプレート
 AWS CloudFormation テンプレートは JSON または YAML 形式のテキストファイルです。これらのファイルは、.json、.yaml、.template、.txt などの拡張子を使用して保存できます。AWS CloudFormation はこれらのテンプレートを AWS リソースを作成する際の設計図として使用します。
 
+---
 ```
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
@@ -82,6 +93,7 @@ Resources:
 ---
 - また単独のテンプレートに複数のリソースを指定し、これらのリソースが連携するように設定できます。たとえば、Elastic IP (EIP) を含み、Amazon EC2 インスタンスとの関連付けを持つように、上記のテンプレートを変更することができます。
 
+---
 ```
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
@@ -105,7 +117,6 @@ Resources:
     Properties:
       InstanceId: !Ref MyEC2Instance
 ```
-
 ---
 ## スタック
 - AWS CloudFormation を使用する際、関連リソースはスタックと呼ばれる単一のユニットとして管理します。スタックを作成、更新、削除することで、リソースのコレクションを作成、更新、削除します。スタック内のすべてのリソースは、スタックの AWS CloudFormation テンプレートで定義されます。
@@ -123,6 +134,7 @@ Resources:
 # ハンズオン
 実際に触ってみよう！
 
+---
 # 事前準備
 * ハンズオン用AWSアカウントのURL
 `https://743559742203.signin.aws.amazon.com/console`
@@ -189,6 +201,8 @@ Parameters:
     Default: subnet-xxxxxxxxxxxxxxx
     Description: Subnet ID(Do not change)
 ```
+
+---
 型指定とDefault値を指定できます。
 詳しいオプションは
 
@@ -279,6 +293,7 @@ CloudFormationでは組込み関数が用意されています。
 :を段落区切りを表すyamlの場合この方式で書くと少々可読性が悪くなります。
 なのでショート記法で書いている人のほうが多いです。
 
+---
 ### Ref
 !Ref {パラメーター名}
 でパラメーターの値を参照できます。
@@ -309,6 +324,7 @@ EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appと
 ## RDSを作成してみる
 ここまでできたら要領は把握したのでRDSも作ってみましょう
 
+---
 ```(抜粋)template2.yml
   RDSDBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
