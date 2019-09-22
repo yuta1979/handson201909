@@ -3,7 +3,7 @@
 * ゲスト用wifiにつないでいること
 * ソフトウェアダウンロード
  * TeraTerm https://ja.osdn.net/projects/ttssh2/
- * テキストエディタ
+ * テキストエディタ (各自のお好みで可)
 
 * ハンズオン資料・template.ymlのダウンロード
 OneDrive [LINK]
@@ -26,7 +26,7 @@ OneDrive [LINK]
 ---
 ### スケジュール
 * 16:00~16:30 CloudFormationの説明
-* 16:30～17:45 ハンズオン (適宜、休憩化)
+* 16:30～17:45 ハンズオン (適宜、休憩可)
 * 17:45～18:00 クロージング
 
 ---
@@ -168,13 +168,11 @@ https://743559742203.signin.aws.amazon.com/console
 
 ---
 
-ハンズオン資料格納OneDrive
+ハンズオン資料格納OneDriveより
 以下を利用します。ymlファイルはテキストエディタで開いてください
 * ハンズオンシナリオ(CloudFormation編)
 * template1.yml
 * template2.yml
-[LINK] 
-(https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
 
 ---
@@ -207,7 +205,7 @@ Outputs:
 
 ---
 ### Parameters (変数)
-環境変数を定義します。
+環境変数を定義します。(template1.yml参照)
 
 ```template1.yml
 Parameters:
@@ -347,10 +345,13 @@ Parameterと文字列のテンプレートリテラルです。
 
 ---
 ### 実際に作ってみる
-ではAWS マネジメントコンソール上からCloudFormationを実際に動かしてみましょう。
-
 ここまでのtemplateファイルは下記です。
 template1.yml
+
+Prefixは名前・KEYNAMEは先ほど作成したキーペアの名前に変更してください
+
+ではAWS マネジメントコンソール上からCloudFormationを実際に動かしてみましょう。
+スタック名は
 
 EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appというサーバーが立ち上がっているのが確認できます。
 セキュリティグループもできていることを確認します。
