@@ -169,12 +169,20 @@ https://743559742203.signin.aws.amazon.com/console
 ---
 
 ハンズオン資料格納OneDrive
+以下を利用します。ymlファイルはテキストエディタで開いてください
+* ハンズオンシナリオ(CloudFormation編)
+* template1.yml
+* template2.yml
 [LINK] 
 (https://tdcsoft-my.sharepoint.com/:f:/g/personal/shimada_yuu_tdc_co_jp/EkuHPECj0wBAhcbo5WsilOYBT0DPA3VT8qfrAhoLKC126Q?e=ve4h0q)
 
-キーペアを作成する
- EC2 -> ネットワーク＆セキュリティ -> キーペア
-キーペアの作成 -> key-社員番号 (key-t2003006)
+
+---
+
+* AWSアカウントにログインしてください
+* キーペアを作成する
+   EC2 -> ネットワーク＆セキュリティ -> キーペア
+  キーペアの作成 -> key-社員番号 (key-t2003006)
 
 ---
 ## シナリオ
