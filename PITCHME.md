@@ -351,7 +351,9 @@ template1.yml
 Prefixは名前・KEYNAMEは先ほど作成したキーペアの名前に変更してください
 
 ではAWS マネジメントコンソール上からCloudFormationを実際に動かしてみましょう。
-スタック名は
+スタック名は「handson2019-<名前>」
+
+---
 
 EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appというサーバーが立ち上がっているのが確認できます。
 セキュリティグループもできていることを確認します。
@@ -411,7 +413,7 @@ EC2のGUIを確認してください。t2.microで {Prefix}-{ServiceName}_appと
 ---
 ここまでのtemplate.ymlは下記です
 
-template2.yml
+template2.yml ※template1.ymlでおこなった修正も忘れずに
 
 ---
 では再度マネジメントコンソールから実行します。
